@@ -15,7 +15,7 @@ import {
 
 const navItems = [
   { name: "Home", icon: Home, page: "home" },
-  { name: "Projects", icon: Code, page: "project" },
+  { name: "Projects", icon: Code, page: "projects" },
   { name: "Skills", icon: Users, page: "skills" },
   { name: "Contact", icon: Mail, page: "contact" },
 ];
@@ -60,12 +60,20 @@ const skillsData = [
 const Header = ({ currentPage, setCurrentPage }) => {
   const [isOpen, setIsOpen] = useState(false);
 
+  // ✅ Smooth scroll function
+  const handleNavigation = (page) => {
+    setCurrentPage(page);
+    setIsOpen(false);
+
+    const section = document.getElementById(page);
+    if (section) {
+      section.scrollIntoView({ behavior: "smooth" });
+    }
+  };
+
   const NavItem = ({ item }) => (
     <button
-      onClick={() => {
-        setCurrentPage(item.page);
-        setIsOpen(false);
-      }}
+      onClick={() => handleNavigation(item.page)}
       className={`flex items-center space-x-2 py-2 px-4 rounded-lg text-sm font-medium transition-all w-full md:w-auto
         ${
           currentPage === item.page
@@ -112,7 +120,10 @@ const Header = ({ currentPage, setCurrentPage }) => {
 
 // --- HERO SECTION ---
 const HeroSection = () => (
-  <section className="py-16 sm:py-24 bg-gray-50 dark:bg-gray-900 text-center px-4 transition">
+  <section
+    id="home"
+    className="py-16 sm:py-24 bg-gray-50 dark:bg-gray-900 text-center px-4 transition"
+  >
     <img
       className="mx-auto h-28 w-28 sm:h-36 sm:w-36 rounded-full object-cover ring-4 ring-indigo-500 mb-6"
       src="\personal_headhot.jpg"
@@ -137,12 +148,16 @@ const HeroSection = () => (
       on user experience and scalability.
     </p>
     <div className="flex flex-col sm:flex-row justify-center gap-4">
-      <a
-        href="#projects"
+      <button
+        onClick={() =>
+          document
+            .getElementById("projects")
+            .scrollIntoView({ behavior: "smooth" })
+        }
         className="px-6 py-3 text-base sm:text-lg rounded-xl text-white bg-indigo-600 hover:bg-indigo-700 transition"
       >
         View Projects
-      </a>
+      </button>
       <a
         href="/Resume1.pdf"
         target="_blank"
