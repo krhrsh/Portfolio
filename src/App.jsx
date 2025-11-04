@@ -274,20 +274,27 @@ const ContactSection = () => {
         </p>
 
         <div className="max-w-md mx-auto bg-gray-50 dark:bg-gray-800 p-6 sm:p-8 rounded-xl shadow-lg">
-          <form onSubmit={handleSubmit} className="space-y-4">
+          <form
+            action="https://formspree.io/f/xrbowwyj"
+            method="POST"
+            className="space-y-4"
+          >
             <input
               type="text"
+              name="name"
               placeholder="Name"
               required
               className="w-full px-4 py-3 rounded-lg border dark:border-gray-600 dark:bg-gray-700 dark:text-white"
             />
             <input
               type="email"
+              name="email"
               placeholder="Email"
               required
               className="w-full px-4 py-3 rounded-lg border dark:border-gray-600 dark:bg-gray-700 dark:text-white"
             />
             <textarea
+              name="message"
               rows="4"
               placeholder="Message"
               required
@@ -297,11 +304,8 @@ const ContactSection = () => {
               type="submit"
               className="w-full bg-indigo-600 hover:bg-indigo-700 text-white py-3 rounded-lg transition"
             >
-              {status === "loading" ? "Sending..." : "Send Message"}
+              Send Message
             </button>
-            {status === "success" && (
-              <p className="text-green-600 mt-2">Message Sent!</p>
-            )}
           </form>
         </div>
 
