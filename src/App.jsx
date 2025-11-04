@@ -11,6 +11,9 @@ import {
   Linkedin,
   FileText,
   Smartphone,
+  CheckCircle,
+  XCircle,
+  Loader2,
 } from "lucide-react";
 
 const navItems = [
@@ -252,63 +255,166 @@ const SkillsSection = () => (
 );
 
 // --- CONTACT ---
+// const ContactSection = () => {
+//   const [status, setStatus] = useState(null);
+//   const handleSubmit = (e) => {
+//     e.preventDefault();
+//     setStatus("loading");
+//     setTimeout(() => {
+//       setStatus("success");
+//       e.target.reset();
+//     }, 1200);
+//   };
+
+//   return (
+//     <section id="contact" className="py-16 bg-white dark:bg-gray-900">
+//       <div className="max-w-7xl mx-auto px-4 sm:px-6 text-center">
+//         <h2 className="text-3xl sm:text-4xl font-extrabold mb-6 text-gray-900 dark:text-white">
+//           Get In Touch
+//         </h2>
+//         <p className="text-gray-600 dark:text-gray-400 mb-10 max-w-2xl mx-auto">
+//           I'm open to new opportunities. Drop me a message below!
+//         </p>
+
+//         <div className="max-w-md mx-auto bg-gray-50 dark:bg-gray-800 p-6 sm:p-8 rounded-xl shadow-lg">
+//           <form
+//             action="https://formspree.io/f/xrbowwyj"
+//             method="POST"
+//             className="space-y-4"
+//           >
+//             <input
+//               type="text"
+//               name="name"
+//               placeholder="Name"
+//               required
+//               className="w-full px-4 py-3 rounded-lg border dark:border-gray-600 dark:bg-gray-700 dark:text-white"
+//             />
+//             <input
+//               type="email"
+//               name="email"
+//               placeholder="Email"
+//               required
+//               className="w-full px-4 py-3 rounded-lg border dark:border-gray-600 dark:bg-gray-700 dark:text-white"
+//             />
+//             <textarea
+//               name="message"
+//               rows="4"
+//               placeholder="Message"
+//               required
+//               className="w-full px-4 py-3 rounded-lg border dark:border-gray-600 dark:bg-gray-700 dark:text-white"
+//             ></textarea>
+//             <button
+//               type="submit"
+//               className="w-full bg-indigo-600 hover:bg-indigo-700 text-white py-3 rounded-lg transition"
+//             >
+//               Send Message
+//             </button>
+//           </form>
+//         </div>
+
+//         <div className="mt-10 space-y-2 text-gray-600 dark:text-gray-400">
+//           <p>
+//             <Mail className="inline w-4 h-4 mr-2" />
+//             Heykrharsh01@gmail.com
+//           </p>
+//           <p>
+//             <Smartphone className="inline w-4 h-4 mr-2" /> +91 7484009245
+//           </p>
+//         </div>
+//       </div>
+//     </section>
+//   );
+// };
+// --- CONTACT SECTION (Formspree + Toast + Spinner) ---
+
 const ContactSection = () => {
   const [status, setStatus] = useState(null);
-  const handleSubmit = (e) => {
+  const [showToast, setShowToast] = useState(false);
+
+  const handleSubmit = async (e) => {
     e.preventDefault();
     setStatus("loading");
-    setTimeout(() => {
-      setStatus("success");
-      e.target.reset();
-    }, 1200);
+
+    const formData = new FormData(e.target);
+
+    try {
+      const response = await fetch("https://formspree.io/f/xrbowwyj", {
+        method: "POST",
+        body: formData,
+        headers: { Accept: "application/json" },
+      });
+
+      if (response.ok) {
+        setStatus("success");
+        e.target.reset();
+        setShowToast(true);
+        setTimeout(() => setShowToast(false), 3000);
+      } else {
+        setStatus("error");
+        setShowToast(true);
+        setTimeout(() => setShowToast(false), 3000);
+      }
+    } catch (error) {
+      console.error("Form submission error:", error);
+      setStatus("error");
+      setShowToast(true);
+      setTimeout(() => setShowToast(false), 3000);
+    }
   };
 
   return (
-    <section id="contact" className="py-16 bg-white dark:bg-gray-900">
+    <section id="contact" className="py-16 bg-white dark:bg-gray-900 transition-colors relative">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 text-center">
         <h2 className="text-3xl sm:text-4xl font-extrabold mb-6 text-gray-900 dark:text-white">
           Get In Touch
         </h2>
         <p className="text-gray-600 dark:text-gray-400 mb-10 max-w-2xl mx-auto">
-          I'm open to new opportunities. Drop me a message below!
+          I'm open to new opportunities. Drop me a message below — I’ll reply as soon as possible!
         </p>
 
+        {/* Contact Form */}
         <div className="max-w-md mx-auto bg-gray-50 dark:bg-gray-800 p-6 sm:p-8 rounded-xl shadow-lg">
-          <form
-            action="https://formspree.io/f/xrbowwyj"
-            method="POST"
-            className="space-y-4"
-          >
+          <form onSubmit={handleSubmit} className="space-y-4">
             <input
               type="text"
               name="name"
-              placeholder="Name"
+              placeholder="Your Name"
               required
               className="w-full px-4 py-3 rounded-lg border dark:border-gray-600 dark:bg-gray-700 dark:text-white"
             />
             <input
               type="email"
               name="email"
-              placeholder="Email"
+              placeholder="Your Email"
               required
               className="w-full px-4 py-3 rounded-lg border dark:border-gray-600 dark:bg-gray-700 dark:text-white"
             />
             <textarea
               name="message"
               rows="4"
-              placeholder="Message"
+              placeholder="Your Message"
               required
               className="w-full px-4 py-3 rounded-lg border dark:border-gray-600 dark:bg-gray-700 dark:text-white"
             ></textarea>
+
             <button
               type="submit"
-              className="w-full bg-indigo-600 hover:bg-indigo-700 text-white py-3 rounded-lg transition"
+              disabled={status === "loading"}
+              className="w-full flex justify-center items-center gap-2 bg-indigo-600 hover:bg-indigo-700 text-white py-3 rounded-lg transition disabled:opacity-50"
             >
-              Send Message
+              {status === "loading" ? (
+                <>
+                  <Loader2 className="w-5 h-5 animate-spin" />
+                  Sending...
+                </>
+              ) : (
+                "Send Message"
+              )}
             </button>
           </form>
         </div>
 
+        {/* Contact Info */}
         <div className="mt-10 space-y-2 text-gray-600 dark:text-gray-400">
           <p>
             <Mail className="inline w-4 h-4 mr-2" />
@@ -319,9 +425,46 @@ const ContactSection = () => {
           </p>
         </div>
       </div>
+
+      {/* ✅ Toast Notification */}
+      {showToast && (
+        <div
+          className={`fixed bottom-6 right-6 z-50 p-4 rounded-lg shadow-xl text-white text-sm flex items-center space-x-2 transition-all duration-500 ${
+            status === "success"
+              ? "bg-green-600 animate-fadeInOut"
+              : "bg-red-600 animate-fadeInOut"
+          }`}
+        >
+          {status === "success" ? (
+            <>
+              <CheckCircle className="w-5 h-5" />
+              <span>Message sent successfully!</span>
+            </>
+          ) : (
+            <>
+              <XCircle className="w-5 h-5" />
+              <span>Something went wrong. Try again later.</span>
+            </>
+          )}
+        </div>
+      )}
+
+      {/* Toast + Spinner Animations */}
+      <style>{`
+        @keyframes fadeInOut {
+          0% { opacity: 0; transform: translateY(20px); }
+          10% { opacity: 1; transform: translateY(0); }
+          90% { opacity: 1; transform: translateY(0); }
+          100% { opacity: 0; transform: translateY(20px); }
+        }
+        .animate-fadeInOut {
+          animation: fadeInOut 3s ease-in-out;
+        }
+      `}</style>
     </section>
   );
 };
+
 
 // --- FOOTER ---
 const Footer = () => (
